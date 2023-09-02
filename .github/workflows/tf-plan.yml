@@ -5,6 +5,8 @@ on:
 
 env:
   GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_CREDENTIALS }}"
+  GOOGLE_PROJECT: "${{ vars.GOOGLE_PROJECT }}"
+  GOOGLE_REGION: "${{ vars.GOOGLE_ZONE }}"
 
 jobs:
   terraform:

@@ -3,6 +3,9 @@ name: Terraform Demo Plan
 on:
   pull_request:
 
+env:
+  GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
 jobs:
   terraform:
     name: "Terraform Plan"

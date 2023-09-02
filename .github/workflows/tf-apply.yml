@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  GOOGLE_CREDENTIALS: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
 jobs:
   terraform:
     name: "Terraform Apply"

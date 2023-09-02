@@ -8,8 +8,7 @@ resource "google_project_service" "run_api" {
 }
 # Create the Cloud Run service
 resource "google_cloud_run_service" "run_service" {
-  name     = "jmusic"
-  location = "us-central1"
+  name = "jmusic"
 
 
   template {

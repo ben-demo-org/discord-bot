@@ -1,3 +1,5 @@
+data "google_client_config" "this" {}
+
 # Enables the Cloud Run API
 resource "google_project_service" "run_api" {
   service = "run.googleapis.com"
@@ -7,7 +9,7 @@ resource "google_project_service" "run_api" {
 # Create the Cloud Run service
 resource "google_cloud_run_service" "run_service" {
   name     = "jmusic"
-  location = google.region
+  location = data.google_client_config.this.region
 
 
   template {

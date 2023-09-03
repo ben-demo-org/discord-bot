@@ -59,8 +59,9 @@ resource "google_secret_manager_secret_iam_member" "secret-access" {
 }
 
 resource "google_cloud_run_v2_service_iam_member" "run_all_users" {
-  service  = google_cloud_run_v2_service.run_service.name
+  project  = google_cloud_run_v2_service.run_service.project
   location = google_cloud_run_v2_service.run_service.location
+  name     = google_cloud_run_v2_service.run_service.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

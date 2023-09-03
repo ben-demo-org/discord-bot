@@ -7,7 +7,7 @@ resource "google_project_service" "run_api" {
   disable_on_destroy = true
 }
 
-resource "google_cloud_run_v2_service" "default" {
+resource "google_cloud_run_v2_service" "run_service" {
   name     = "jmusicbot"
   location = data.google_client_config.current.region
   ingress  = "INGRESS_TRAFFIC_ALL"

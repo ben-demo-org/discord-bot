@@ -25,9 +25,6 @@ resource "google_cloud_run_v2_service" "run_service" {
       }
     }
     containers {
-      ports {
-        container_port = 80
-      }
       image = "craumix/jmusicbot"
       volume_mounts {
         name       = "a-volume"

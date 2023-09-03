@@ -16,16 +16,18 @@ resource "google_cloud_run_v2_service" "run_service" {
     volumes {
       name = "a-volume"
       secret {
-        secret       = google_secret_manager_secret.secret.secret_id
-        default_mode = 0400
+        secret = google_secret_manager_secret.secret.secret_id
         items {
-          version = "1"
+          version = "latest"
           path    = "config.txt"
-          mode    = 0400
+          mode    = 0
         }
       }
     }
     containers {
+      ports {
+        container_port = 80
+      }
       image = "craumix/jmusicbot"
       volume_mounts {
         name       = "a-volume"

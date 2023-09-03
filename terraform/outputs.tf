@@ -1,3 +1,3 @@
 output "service_url" {
-  value = google_cloud_run_v2_service.default.uri
+  value = google_cloud_run_v2_service.run_service.uri
 }

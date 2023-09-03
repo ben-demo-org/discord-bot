@@ -7,32 +7,60 @@ resource "google_project_service" "run_api" {
   disable_on_destroy = true
 }
 
-# Create the Cloud Run service
-resource "google_cloud_run_service" "run_service" {
-  name     = "jmusic"
+resource "google_cloud_run_v2_service" "default" {
+  name     = "jmusicbot"
   location = data.google_client_config.current.region
-
+  ingress  = "INGRESS_TRAFFIC_ALL"
 
   template {
-    spec {
-      containers {
-        image = "gcr.io/google-samples/hello-app:1.0"
+    volumes {
+      name = "a-volume"
+      secret {
+        secret       = google_secret_manager_secret.secret.secret_id
+        default_mode = 0400
+        items {
+          version = "1"
+          path    = "config.txt"
+          mode    = 0400
+        }
+      }
+    }
+    containers {
+      image = "craumix/jmusicbot"
+      volume_mounts {
+        name       = "a-volume"
+        mount_path = "/jmb/config"
       }
     }
   }
-
-  traffic {
-    percent         = 100
-    latest_revision = true
-  }
-
-  # Waits for the Cloud Run API to be enabled
-  depends_on = [google_project_service.run_api]
+  depends_on = [google_secret_manager_secret_version.secret-version-data]
 }
 
-resource "google_cloud_run_service_iam_member" "run_all_users" {
-  service  = google_cloud_run_service.run_service.name
-  location = google_cloud_run_service.run_service.location
+data "google_project" "project" {
+}
+
+resource "google_secret_manager_secret" "secret" {
+  secret_id = "jmusic-config"
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret_version" "secret-version-data" {
+  secret      = google_secret_manager_secret.secret.name
+  secret_data = var.configdata
+}
+
+resource "google_secret_manager_secret_iam_member" "secret-access" {
+  secret_id  = google_secret_manager_secret.secret.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+  depends_on = [google_secret_manager_secret.secret]
+}
+
+resource "google_cloud_run_v2_service_iam_member" "run_all_users" {
+  service  = google_cloud_run_v2_service.run_service.name
+  location = google_cloud_run_v2_service.run_service.location
   role     = "roles/run.invoker"
   member   = "allUsers"
 }

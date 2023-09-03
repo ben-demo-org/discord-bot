@@ -8,6 +8,7 @@ env:
   GOOGLE_PROJECT: "${{ vars.GOOGLE_PROJECT }}"
   GOOGLE_REGION: "${{ vars.GOOGLE_REGION }}"
   GOOGLE_ZONE: "${{ vars.GOOGLE_ZONE }}"
+  TF_VAR_configdata: "${{ secrets.BOT_CONFIG }}"
 
 jobs:
   terraform:
